@@ -1,0 +1,10 @@
+
+# setup.py dist directory
+dist
+# Egg metadata
+*.egg-info
+.eggs
+.pypirc
+
+
+__pycache__
