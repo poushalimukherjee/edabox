@@ -1,17 +1,36 @@
 import pandas as pd
+
 from colorama import Fore, Back, Style
 
-from warnings import warn
+import copy
 import re
+from typing import List
+
+from warnings import warn
+
+from . import process_feature
+
+# -------------------------------------------------------------------- #
 
 foregd = Fore.CYAN
 backgd = Back.BLACK
 style  = Style.BRIGHT
 style_reset = Style.RESET_ALL
 
+# -------------------------------------------------------------------- #
+"""
+Functions
+----------
+    get_shape()
+    explore_target()
+    explore_features()
+"""
+# -------------------------------------------------------------------- #
 
-
-def get_shape(df, target=[]):
+# function: 
+def get_shape(df : pd.DataFrame,
+              target :list | None = None,
+              id : str | int | None = None ) -> None:
     samples, cols = df.shape
 
     str1 = "======================================"
@@ -24,7 +43,7 @@ def get_shape(df, target=[]):
     print(f"{foregd}{style}{str1}{style_reset}")
     print(f"{foregd}{style}{str2}{samples}{style_reset}")    
 
-    if target==[]:
+    if target == None:
         print(f"{foregd}{style}{str3}{cols}{style_reset}")
     else:
         target_valid = {el for el in target if el in df.columns}
@@ -42,8 +61,10 @@ def get_shape(df, target=[]):
     # print(f"{foregd}{style}{str1}{style_reset}")
 
 
-def explore_target(df, target=[]):
-    if target != []:
+# function: 
+def explore_target(df : pd.DataFrame,
+                   target :list | None = None ) -> None:
+    if target != None:
        target_valid = {str(el) for el in target if el in df.columns}
        ntarget = len(target_valid)
 
@@ -91,3 +112,45 @@ def explore_target(df, target=[]):
             print(f"{foregd}{style}{str_key_val}{style_reset}")
 
 
+# function: 
+def explore_features(df : pd.DataFrame,
+                     target : List[str] | List[int] | None = None,
+                     id : str | int | None = None,
+                     features : List[str] | List[int] | None = None,
+                     verbose : bool | None = False ) -> None:
+    """
+    funtion: explore_features()
+    
+    Arguments
+    ----------
+    """
+    df_feat = copy.deepcopy(df)
+    if target != None:
+        # when target column-names are passed
+        if type(target) == List[str]:
+          df_feat = df.drop(target, axis=1)
+        # when target column-names are passed
+        elif type(target) == List[str]:
+            pass # WIP
+
+    if id != None:
+        # when ID column-name is passed
+        if type(id) == str:
+            df_feat = df_feat.drop([id], axis=1)
+        # when ID column-number is passed
+        elif type(id) == int:
+            pass # WIP            
+    
+    if features != None:
+        # when feature column-names are passed
+        if type(features) == List(str):
+            features_valid = [el for el in features if el in df.columns]
+            df_feat = df[features_valid]
+            if len(features_valid) < len(features):
+                warn("One or more 'features' are either not in the dataset or entered more than once")
+        # when feature column-numbers are passed
+        elif type(features) == List(int):
+            pass # WIP
+
+    for feature in df_feat.columns:
+        process_feature.explore_feature(df, feature=feature)

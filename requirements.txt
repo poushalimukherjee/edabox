@@ -5,6 +5,7 @@ twine
 
 numpy
 pandas
+scipy
 matplotlib
 seaborn
 

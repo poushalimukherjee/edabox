@@ -8,5 +8,5 @@ setup(
     license='MIT',
     url='https://github.com/poushalimukherjee/edabox',
     packages=find_packages(),
-    install_requires=['pandas','colorama']
+    install_requires=['pandas','colorama', 'matplotlib', 'seaborn']
 )
