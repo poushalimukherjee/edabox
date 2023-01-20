@@ -13,4 +13,4 @@ Gain Insight into Datasets
 
 ---  
 
-### [Documentation](https://github.com/poushalimukherjee/edabox/tree/main/doc/build/html/index.html)
+### [Documentation](https://edabox.tiiny.site/)
