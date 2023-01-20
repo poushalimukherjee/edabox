@@ -20,7 +20,7 @@ style_reset = Style.RESET_ALL
 # -------------------------------------------------------------------- #
 """
 Functions
-----------
+---------
     get_shape()
     explore_target()
     explore_features()
@@ -32,6 +32,15 @@ def get_shape(df : pd.DataFrame,
               target :list | None = None,
               id : str | int | None = None ) -> None:
     samples, cols = df.shape
+    """
+    Displayes the Sample, Feature and Target counts inside the DataFrame
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+    target : list or None, default None
+    id : str or int or None, default None
+    """
 
     str1 = "======================================"
     str2 = "Samples  : "
@@ -64,6 +73,15 @@ def get_shape(df : pd.DataFrame,
 # function: 
 def explore_target(df : pd.DataFrame,
                    target :list | None = None ) -> None:
+    
+    """
+    Displays the Target column details
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+    target : list or None, default None
+    """
     if target != None:
        target_valid = {str(el) for el in target if el in df.columns}
        ntarget = len(target_valid)
@@ -119,10 +137,14 @@ def explore_features(df : pd.DataFrame,
                      features : List[str] | List[int] | None = None,
                      verbose : bool | None = False ) -> None:
     """
-    funtion: explore_features()
-    
-    Arguments
+    Explores the feature-details of the DataFrame
+
+    Parameters
     ----------
+    df : pandas.DataFrame
+    target : list or None, default None
+    id : str or int or None, default None
+    features : list<str> or list<int> or None, default None
     """
     df_feat = copy.deepcopy(df)
     if target != None:

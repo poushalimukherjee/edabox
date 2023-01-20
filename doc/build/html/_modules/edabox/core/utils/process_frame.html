@@ -1,0 +1,376 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>edabox.core.utils.process_frame &mdash; EDABox 1.0.1.2 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> EDABox
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">EDABox</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>edabox.core.utils.process_frame</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for edabox.core.utils.process_frame</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="kn">from</span> <span class="nn">colorama</span> <span class="kn">import</span> <span class="n">Fore</span><span class="p">,</span> <span class="n">Back</span><span class="p">,</span> <span class="n">Style</span>
+
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+
+<span class="kn">from</span> <span class="nn">warnings</span> <span class="kn">import</span> <span class="n">warn</span>
+
+<span class="kn">from</span> <span class="nn">edabox.core.utils</span> <span class="kn">import</span> <span class="n">process_feature</span>
+
+<span class="c1"># -------------------------------------------------------------------- #</span>
+
+<span class="n">foregd</span> <span class="o">=</span> <span class="n">Fore</span><span class="o">.</span><span class="n">CYAN</span>
+<span class="n">backgd</span> <span class="o">=</span> <span class="n">Back</span><span class="o">.</span><span class="n">BLACK</span>
+<span class="n">style</span>  <span class="o">=</span> <span class="n">Style</span><span class="o">.</span><span class="n">BRIGHT</span>
+<span class="n">style_reset</span> <span class="o">=</span> <span class="n">Style</span><span class="o">.</span><span class="n">RESET_ALL</span>
+
+<span class="c1"># -------------------------------------------------------------------- #</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Functions</span>
+<span class="sd">---------</span>
+<span class="sd">    get_shape()</span>
+<span class="sd">    explore_target()</span>
+<span class="sd">    explore_features()</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1"># -------------------------------------------------------------------- #</span>
+
+<span class="c1"># function: </span>
+<div class="viewcode-block" id="get_shape"><a class="viewcode-back" href="../../../../index.html#edabox.core.utils.process_frame.get_shape">[docs]</a><span class="k">def</span> <span class="nf">get_shape</span><span class="p">(</span><span class="n">df</span> <span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+              <span class="n">target</span> <span class="p">:</span><span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+              <span class="nb">id</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span> <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">samples</span><span class="p">,</span> <span class="n">cols</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">shape</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Displayes the Sample, Feature and Target counts inside the DataFrame</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    df : pandas.DataFrame</span>
+<span class="sd">    target : list or None, default None</span>
+<span class="sd">    id : str or int or None, default None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">str1</span> <span class="o">=</span> <span class="s2">&quot;======================================&quot;</span>
+    <span class="n">str2</span> <span class="o">=</span> <span class="s2">&quot;Samples  : &quot;</span>
+    <span class="n">str3</span> <span class="o">=</span> <span class="s2">&quot;Columns  : &quot;</span>
+    <span class="n">str4</span> <span class="o">=</span> <span class="s2">&quot;Features : &quot;</span>
+    <span class="n">str5</span> <span class="o">=</span> <span class="s2">&quot;Targets  : &quot;</span>
+
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">foregd</span><span class="si">}{</span><span class="n">style</span><span class="si">}{</span><span class="n">str1</span><span class="si">}{</span><span class="n">style_reset</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">foregd</span><span class="si">}{</span><span class="n">style</span><span class="si">}{</span><span class="n">str2</span><span class="si">}{</span><span class="n">samples</span><span class="si">}{</span><span class="n">style_reset</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>    
+
+    <span class="k">if</span> <span class="n">target</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">foregd</span><span class="si">}{</span><span class="n">style</span><span class="si">}{</span><span class="n">str3</span><span class="si">}{</span><span class="n">cols</span><span class="si">}{</span><span class="n">style_reset</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">target_valid</span> <span class="o">=</span> <span class="p">{</span><span class="n">el</span> <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">target</span> <span class="k">if</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">}</span>
+        <span class="n">ntarget</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">target_valid</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">ntarget</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">target</span><span class="p">):</span>
+            <span class="n">warn</span><span class="p">(</span><span class="s2">&quot;&#39;Target&#39; names are either not in the dataset or entered more than once&quot;</span><span class="p">)</span>
+
+        <span class="n">features</span> <span class="o">=</span> <span class="n">cols</span> <span class="o">-</span> <span class="n">ntarget</span> 
+        <span class="n">str_targets</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">ntarget</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">foregd</span><span class="si">}{</span><span class="n">style</span><span class="si">}{</span><span class="n">str4</span><span class="si">}{</span><span class="n">features</span><span class="si">}{</span><span class="n">style_reset</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">foregd</span><span class="si">}{</span><span class="n">style</span><span class="si">}{</span><span class="n">str5</span><span class="si">}{</span><span class="n">str_targets</span><span class="si">}{</span><span class="n">style_reset</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+    <span class="c1"># print(f&quot;{foregd}{style}{str1}{style_reset}&quot;)</span>
+
+
+<span class="c1"># function: </span>
+<div class="viewcode-block" id="explore_target"><a class="viewcode-back" href="../../../../index.html#edabox.core.utils.process_frame.explore_target">[docs]</a><span class="k">def</span> <span class="nf">explore_target</span><span class="p">(</span><span class="n">df</span> <span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+                   <span class="n">target</span> <span class="p">:</span><span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span> <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Displays the Target column details</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    df : pandas.DataFrame</span>
+<span class="sd">    target : list or None, default None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">target</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+       <span class="n">target_valid</span> <span class="o">=</span> <span class="p">{</span><span class="nb">str</span><span class="p">(</span><span class="n">el</span><span class="p">)</span> <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">target</span> <span class="k">if</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">}</span>
+       <span class="n">ntarget</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">target_valid</span><span class="p">)</span>
+
+       <span class="k">if</span> <span class="n">ntarget</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span>
+
+       <span class="k">if</span> <span class="n">ntarget</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">target</span><span class="p">):</span>
+        <span class="n">warn</span><span class="p">(</span><span class="s2">&quot;&#39;Target&#39; names are either not in the dataset or entered more than once&quot;</span><span class="p">)</span>
+
+       <span class="n">str1</span> <span class="o">=</span> <span class="s2">&quot;======================================&quot;</span>
+       <span class="n">str2</span> <span class="o">=</span> <span class="s2">&quot;            Target Classes            &quot;</span>
+       <span class="n">str3</span> <span class="o">=</span> <span class="s2">&quot;Binary Classes      : &quot;</span>
+       <span class="n">str4</span> <span class="o">=</span> <span class="s2">&quot;Multi-label Classes : &quot;</span>
+       <span class="n">str5</span> <span class="o">=</span> <span class="s2">&quot;Targets  : &quot;</span>
+
+       <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">foregd</span><span class="si">}{</span><span class="n">style</span><span class="si">}{</span><span class="n">str1</span><span class="si">}{</span><span class="n">style_reset</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+       <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">foregd</span><span class="si">}{</span><span class="n">style</span><span class="si">}{</span><span class="n">str2</span><span class="si">}{</span><span class="n">style_reset</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>        
+
+       <span class="n">dict_target_bin</span>  <span class="o">=</span> <span class="p">{}</span>
+       <span class="n">dict_target_mult</span> <span class="o">=</span> <span class="p">{}</span>
+       <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">target_valid</span><span class="p">:</span>
+        <span class="n">label_cnt</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">el</span><span class="p">]</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span>
+        <span class="n">df_label</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="n">el</span><span class="p">]]</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">label_cnt</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">dict_target_bin</span><span class="p">[</span><span class="n">el</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">df_label</span><span class="p">[</span><span class="n">el</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="n">label_cnt</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">dict_target_mult</span><span class="p">[</span><span class="n">el</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">df_label</span><span class="p">[</span><span class="n">el</span><span class="p">])</span>
+
+        <span class="c1"># print(f&quot;{foregd}{style}{str3}{style_reset}&quot;)</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">dict_target_bin</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">str_key_val</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span> <span class="o">+</span> <span class="n">key</span> <span class="o">+</span> <span class="s2">&quot;: { &quot;</span>
+            <span class="n">str_labels</span>  <span class="o">=</span> <span class="s2">&quot; -&gt; &quot;</span>
+            <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">val</span><span class="p">:</span>
+                <span class="n">label_cnt</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span> <span class="n">df</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">==</span> <span class="n">el</span> <span class="p">)</span>
+                <span class="n">str_labels</span> <span class="o">=</span> <span class="n">str_labels</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">label_cnt</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span>
+                <span class="n">str_key_val</span> <span class="o">=</span> <span class="n">str_key_val</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">el</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span>
+
+            <span class="n">str_labels</span> <span class="o">=</span> <span class="n">str_labels</span> <span class="o">+</span> <span class="s2">&quot;end&quot;</span>
+            <span class="n">str_labels</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;, end&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">str_labels</span><span class="p">)</span>
+
+            <span class="n">str_key_val</span> <span class="o">=</span> <span class="n">str_key_val</span> <span class="o">+</span> <span class="s2">&quot;}&quot;</span>
+            <span class="n">str_key_val</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;, }&#39;</span><span class="p">,</span> <span class="s1">&#39; }&#39;</span><span class="p">,</span> <span class="n">str_key_val</span><span class="p">)</span>
+
+            <span class="n">str_key_val</span> <span class="o">=</span> <span class="n">str_key_val</span> <span class="o">+</span> <span class="n">str_labels</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">foregd</span><span class="si">}{</span><span class="n">style</span><span class="si">}{</span><span class="n">str_key_val</span><span class="si">}{</span><span class="n">style_reset</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<span class="c1"># function: </span>
+<div class="viewcode-block" id="explore_features"><a class="viewcode-back" href="../../../../index.html#edabox.core.utils.process_frame.explore_features">[docs]</a><span class="k">def</span> <span class="nf">explore_features</span><span class="p">(</span><span class="n">df</span> <span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+                     <span class="n">target</span> <span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                     <span class="nb">id</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                     <span class="n">features</span> <span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                     <span class="n">verbose</span> <span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">False</span> <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Explores the feature-details of the DataFrame</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    df : pandas.DataFrame</span>
+<span class="sd">    target : list or None, default None</span>
+<span class="sd">    id : str or int or None, default None</span>
+<span class="sd">    features : list&lt;str&gt; or list&lt;int&gt; or None, default None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">df_feat</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">target</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># when target column-names are passed</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">target</span><span class="p">)</span> <span class="o">==</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+          <span class="n">df_feat</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="c1"># when target column-names are passed</span>
+        <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">target</span><span class="p">)</span> <span class="o">==</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+            <span class="k">pass</span> <span class="c1"># WIP</span>
+
+    <span class="k">if</span> <span class="nb">id</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># when ID column-name is passed</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">:</span>
+            <span class="n">df_feat</span> <span class="o">=</span> <span class="n">df_feat</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="nb">id</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="c1"># when ID column-number is passed</span>
+        <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span> <span class="o">==</span> <span class="nb">int</span><span class="p">:</span>
+            <span class="k">pass</span> <span class="c1"># WIP            </span>
+    
+    <span class="k">if</span> <span class="n">features</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># when feature column-names are passed</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">features</span><span class="p">)</span> <span class="o">==</span> <span class="n">List</span><span class="p">(</span><span class="nb">str</span><span class="p">):</span>
+            <span class="n">features_valid</span> <span class="o">=</span> <span class="p">[</span><span class="n">el</span> <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">features</span> <span class="k">if</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+            <span class="n">df_feat</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">features_valid</span><span class="p">]</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">features_valid</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">features</span><span class="p">):</span>
+                <span class="n">warn</span><span class="p">(</span><span class="s2">&quot;One or more &#39;features&#39; are either not in the dataset or entered more than once&quot;</span><span class="p">)</span>
+        <span class="c1"># when feature column-numbers are passed</span>
+        <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">features</span><span class="p">)</span> <span class="o">==</span> <span class="n">List</span><span class="p">(</span><span class="nb">int</span><span class="p">):</span>
+            <span class="k">pass</span> <span class="c1"># WIP</span>
+
+    <span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">df_feat</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">process_feature</span><span class="o">.</span><span class="n">explore_feature</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">feature</span><span class="o">=</span><span class="n">feature</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2023, Poushali Mukherjee.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -34,6 +34,9 @@ class DataBox:
         process_frame.get_shape(self.df,self.target)
 
     def look_inside(self):
+        """
+        Takes a look inside a DataFrame
+        """
         df = self.df
 
         self.get_shape()

@@ -7,9 +7,7 @@ from edabox.core import DataBox
 # module level doc-string
 __doc__ = """
 edabox - a library for Python to gain insights into datasets
-=====================================================================
-**Work in Progress**
--------------
+WORK IN PROGRESS
 """
 
 __all__ = [

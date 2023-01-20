@@ -12,6 +12,7 @@ seaborn
 colorama
 
 docutils
+Sphinx
 
 pytest
 pytest-runner

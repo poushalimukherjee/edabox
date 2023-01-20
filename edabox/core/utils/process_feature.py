@@ -42,13 +42,14 @@ def explore_feature( df : pd.DataFrame,
                      visuals : bool | None = True ) -> None:
 
     """
-    funtion: explore_feature()
-    
-    Arguments
+    Explores the details of a feature in the DataFrame
+
+    Parameters
     ----------
     df : pandas.DataFrame
-    feature : str or int
-         Specify the feature column-name or the feature column-number in the DataFrame object, which needs to be explored
+    feature : str or list
+    target : list<str> or list<int> or None, default None
+    visuals : bool or None, default True
     """
     # when feature column-name is passed
     if type(feature) == str:
