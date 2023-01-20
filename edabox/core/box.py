@@ -2,7 +2,7 @@ import pandas as pd
 
 import typing
 
-from utils import process_frame
+from edabox.core.utils import process_frame
 
 
 class DataBox:

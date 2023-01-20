@@ -1,11 +1,6 @@
 import pandas as pd
-from .io import (
-    read_csv,
-    read_excel,
-    read_frame
-)
-from .utils import process_frame
-from .box import DataBox
+from edabox.core.utils import process_frame
+from edabox.core.box import DataBox
 
 # module level doc-string
 __doc__ = """

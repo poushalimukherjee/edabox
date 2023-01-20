@@ -3,13 +3,13 @@ from colorama import Fore, Back, Style
 
 import sys
 
-sys.path.insert(0,'../edabox/core/utils/')
+sys.path.append('./edabox/core/utils/')
 
 import process_frame
 
 # --------------------------------------------------------------------- #
 # Test on Kaggle Titanic Dataset
-df = pd.read_csv('./data/titanic.csv')
+df = pd.read_csv('tests/data/titanic.csv')
 samples, cols = df.shape
 target = ['Survived']
 id = 'PassengerId'

@@ -8,7 +8,7 @@ from typing import List
 
 from warnings import warn
 
-from . import process_feature
+from edabox.core.utils import process_feature
 
 # -------------------------------------------------------------------- #
 

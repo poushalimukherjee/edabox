@@ -94,13 +94,13 @@ def explore_feature( df : pd.DataFrame,
     if 'int' in str(feat_dtype):
         feat_max  = int(df_feat[feat_name].max())
         feat_min  = int(df_feat[feat_name].min())
-        feat_mean = int(mean(df_feat[feat_name]))
+        feat_mean = int(np.mean(df_feat[feat_name]))
         feat_mode, feat_mode_cnt = stats.mode(df_feat[feat_name],     
                                                keepdims=False)
     elif 'float' in str(feat_dtype):
         feat_max  = df_feat[feat_name].max()
         feat_min  = df_feat[feat_name].min()
-        feat_mean = mean(df_feat[feat_name])
+        feat_mean = np.mean(df_feat[feat_name])
         feat_mode = stats.mode(df_feat[feat_name],
                                keepdims=False)
     if re.search('int', str(feat_dtype)) or re.search('int', str(feat_dtype)):
