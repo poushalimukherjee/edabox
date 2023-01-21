@@ -7,9 +7,9 @@ Gain Insight into Datasets
 
 ### Installation
 - [PyPI Link](https://pypi.org/project/edabox/)
-  > ```pip install edabox==1.0.2.1```
+  > ```pip install edabox==1.0.2.3```
 - [TestPyPI Link](https://test.pypi.org/project/edabox/)
-  > ```pip install -i https://test.pypi.org/simple/ edabox==1.0.2.1```
+  > ```pip install -i https://test.pypi.org/simple/ edabox==1.0.2.3```
 
 ---  
 
@@ -17,4 +17,8 @@ Gain Insight into Datasets
 
 
 ### 
-Version: 1.0.2.1 : make syntax backward compatible with Python version < 3.10
+Version: 1.0.2.3 : 
+- > make syntax backward compatible with Python version < 3.10
+- > make syntax backward compatible with scipy version < 1.9.0 
+   - remove 'keepdims' argument from scipy.stats.mode() function
+   - specify spipy version: LT 1.9.0
