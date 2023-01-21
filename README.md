@@ -14,3 +14,7 @@ Gain Insight into Datasets
 ---  
 
 ### [Documentation](https://edabox.tiiny.site/)
+
+
+### 
+Version: 1.0.2.1 : make syntax backward compatible with Python version < 3.10

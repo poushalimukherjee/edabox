@@ -20,8 +20,8 @@ class DataBox:
       It is highly recommended to specify the 'id' columns, in order to gain better insight into the dataset.
     """
     def __init__(self, df : pd.DataFrame,
-                 target : list | None = None,
-                 id : str | int | None = None):
+                 target : "list | None" = None,
+                 id : "str | int | None" = None):
         self.df = df
         self.target = target
         self.id = id

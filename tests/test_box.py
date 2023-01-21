@@ -1,20 +1,20 @@
 import pandas as pd
 from colorama import Fore, Back, Style
 
-from pprint import pprint
+import os
 import sys
+sys.path.insert(0, os.path.abspath('..'))
 
-# sys.path.insert(0,'../edabox/core/')
-sys.path.append('./edabox/core/')
-import box
+# from pprint import pprint
+# pprint(sys.path)
 
-sys.path.append('./edabox/tests/data/')
-pprint(sys.path)
+from edabox import DataBox
+
 # Test on Kaggle Titanic Dataset
-df = pd.read_csv('tests/data/titanic.csv')
+df = pd.read_csv('./data/titanic.csv')
 
 # dbx = box.DataBox(df, target=[])
-dbx = box.DataBox(df, target=['Survived'])
+dbx = DataBox(df, target=['Survived'])
 
 dbx.look_inside()
 

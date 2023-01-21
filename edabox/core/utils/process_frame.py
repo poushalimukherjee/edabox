@@ -29,8 +29,8 @@ Functions
 
 # function: 
 def get_shape(df : pd.DataFrame,
-              target :list | None = None,
-              id : str | int | None = None ) -> None:
+              target : "list | None" = None,
+              id : "str | int | None" = None ) -> None:
     samples, cols = df.shape
     """
     Displayes the Sample, Feature and Target counts inside the DataFrame
@@ -72,7 +72,7 @@ def get_shape(df : pd.DataFrame,
 
 # function: 
 def explore_target(df : pd.DataFrame,
-                   target :list | None = None ) -> None:
+                   target : "list | None" = None ) -> None:
     
     """
     Displays the Target column details
@@ -132,10 +132,10 @@ def explore_target(df : pd.DataFrame,
 
 # function: 
 def explore_features(df : pd.DataFrame,
-                     target : List[str] | List[int] | None = None,
-                     id : str | int | None = None,
-                     features : List[str] | List[int] | None = None,
-                     verbose : bool | None = False ) -> None:
+                     target : "List[str] | List[int] | None" = None,
+                     id : "str | int | None" = None,
+                     features : "List[str] | List[int] | None" = None,
+                     verbose : "bool | None" = False ) -> None:
     """
     Explores the feature-details of the DataFrame
 

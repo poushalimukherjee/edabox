@@ -1,15 +1,18 @@
 import pandas as pd
 from colorama import Fore, Back, Style
 
+import os
 import sys
+sys.path.insert(0, os.path.abspath('..'))
 
-sys.path.append('./edabox/core/utils/')
+# from pprint import pprint
+# pprint(sys.path)
 
-import process_frame
+from edabox.core.utils import process_frame
 
 # --------------------------------------------------------------------- #
 # Test on Kaggle Titanic Dataset
-df = pd.read_csv('tests/data/titanic.csv')
+df = pd.read_csv('./data/titanic.csv')
 samples, cols = df.shape
 target = ['Survived']
 id = 'PassengerId'
@@ -23,3 +26,8 @@ process_frame.explore_target(df, target=['Survived'])
 process_frame.explore_features(df, target=target, id=id)
 
 # --------------------------------------------------------------------- #
+
+
+
+
+

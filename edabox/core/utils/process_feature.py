@@ -37,9 +37,9 @@ def feature_vs_target() -> None:
 
 # function:
 def explore_feature( df : pd.DataFrame,
-                     feature : str | int,
-                     target : List[str] | List[int] | None = None,
-                     visuals : bool | None = True ) -> None:
+                     feature : "str | int",
+                     target : "List[str] | List[int] | None" = None,
+                     visuals : "bool | None" = True ) -> None:
 
     """
     Explores the details of a feature in the DataFrame

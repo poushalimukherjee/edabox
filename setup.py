@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 
 setup(
     name='edabox',
-    version='1.0.1.2',
+    version='1.0.2.1',
     description='Python Library to Gain Insight into Datasets',
     author='Poushali Mukherjee',
     license='MIT',
