@@ -7,9 +7,9 @@ Gain Insight into Datasets
 
 ### Installation
 - [PyPI Link](https://pypi.org/project/edabox/)
-  > ```pip install edabox==1.0.0```
+  > ```pip install edabox==1.0.2.2```
 - [TestPyPI Link](https://test.pypi.org/project/edabox/)
-  > ```pip install -i https://test.pypi.org/simple/ edabox==1.0.0```
+  > ```pip install -i https://test.pypi.org/simple/ edabox==1.0.2.2```
 
 ---  
 
@@ -17,4 +17,6 @@ Gain Insight into Datasets
 
 
 ### 
-Version: 1.0.2.1 : make syntax backward compatible with Python version < 3.10
+Version: 1.0.2.2 : 
+- > make syntax backward compatible with Python version < 3.10
+- > specify spipy version: GE 1.9.0, LE 1.10.0
